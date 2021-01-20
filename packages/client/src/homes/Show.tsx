@@ -60,48 +60,65 @@ const Show: FC<Props> = (props) => {
     return (
       <>
         <h1>{home.address}</h1>
-        {home.image_urls.map(imageUrl => {
-          return (
-            <img key={imageUrl} alt={home.address} src={imageUrl} />
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'flex-start',
+            height: '20vh'
+          }}>
+          {home.image_urls.map(imageUrl => {
+            return (
+              <img
+                key={imageUrl}
+                alt={home.address}
+                src={imageUrl}
+                style={{ objectFit: 'cover', width: '33%' }}
+              />
+            )
+          })}
+        </div>
+        {
+          home && (home?.categories?.length || 0) > 0 && (
+            <table>
+              <thead>
+                <tr>
+                  <th>Category</th>
+                  <th>Weight</th>
+                  <th>Score</th>
+                </tr>
+              </thead>
+              <tbody>
+                {
+                  home && home.categories?.map((category, index) => {
+                    return (
+                      <tr key={index}>
+                        <td>{category.name}</td>
+                        <td>
+                          <input
+                            value={category.weight}
+                            onChange={e => onChangeCategory(e, 'weight')}
+                          />
+                        </td>
+                        <td>
+                          <input
+                            value={category.weight}
+                            onChange={e => onChangeCategory(e, 'score')}
+                          />
+                        </td>
+                      </tr>
+                    );
+                  })
+                }
+                <tr>
+                  <td />
+                  <td />
+                  <td>{home.score}</td>
+                </tr>
+              </tbody>
+            </table>
           )
-        })}
-        <table>
-          <thead>
-            <tr>
-              <th>Category</th>
-              <th>Weight</th>
-              <th>Score</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              home && home.categories?.map((category, index) => {
-                return (
-                  <tr key={index}>
-                    <td>{category.name}</td>
-                    <td>
-                      <input
-                        value={category.weight}
-                        onChange={e => onChangeCategory(e, 'weight')}
-                      />
-                    </td>
-                    <td>
-                      <input
-                        value={category.weight}
-                        onChange={e => onChangeCategory(e, 'score')}
-                      />
-                    </td>
-                  </tr>
-                );
-              })
-            }
-            <tr>
-              <td />
-              <td />
-              <td>{home.score}</td>
-            </tr>
-          </tbody>
-        </table>
+        }
       </>
     )
   }

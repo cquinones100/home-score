@@ -11,7 +11,7 @@ homesRouter
   .get(async (req, res) => {
     const home = await dbConnection.raw(`
       select
-      distinct on (home_id)
+        distinct on (home_id)
         home_id,
         sum(value * weight) / sum(weight * 10) as score,
         url,
@@ -19,13 +19,19 @@ homesRouter
         users.name as user_name,
         image_urls,
         avg(value) as score,
-        array_agg(
-          json_build_object(
-            'name', categories.name,
-            'weight', categories.weight,
-            'score', categories_homes.value
+        case
+        when count(categories_homes.*) = 0
+        then
+          '{}'
+        else
+          array_agg(
+            json_build_object(
+              'name', categories.name,
+              'weight', categories.weight,
+              'score', categories_homes.value
+            )
           )
-        ) as categories
+        end as categories
       from homes
         left join categories_homes using(home_id)
         left join categories using(category_id)
