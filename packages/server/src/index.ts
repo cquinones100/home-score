@@ -3,10 +3,19 @@ import knex from 'knex';
 import homeWithImageUrls from './getImages';
 import knexConfig from './knexfile';
 import Home from '../../../src/types/Home';
+import cors from 'cors';
+import HomeWithImageUrls from '../../../src/types/HomeWithImageUrls';
+
+var corsOptions = {
+  origin: 'http://localhost:3002',
+  optionsSuccessStatus: 200
+}
 
 export const dbConnection = knex(knexConfig['development']);
 
 const app = express();
+
+app.use(cors(corsOptions));
 
 app.get('/hello_world', (req, res) => {
   res.json(
@@ -24,6 +33,7 @@ app.get('/homes/:id', async (req, res) => {
       address,
       users.name as user_name,
       image_urls,
+      avg(value) as score,
       array_agg(
         json_build_object(
           'name', categories.name,
@@ -45,24 +55,35 @@ app.get('/homes/:id', async (req, res) => {
 app.get('/homes', async (req, res) => {
   const homes = await dbConnection.raw(`
     select
-      url,
-      address,
-      homes.home_id,
-      image_urls
-      array_agg(
-        json_build_object(
-          users.name as user_name,
-          sum(value * weight) / sum(weight * 10) as score,
-        )
-      ) as scores
+    url,
+    address,
+    home_id,
+    image_urls,
+    array_agg(
+      jsonb_build_object(
+        'user_name', user_name,
+        'score', score
+      )
+    ) as scores,
+    avg(score) as score
+    from (
+      select
+        url,
+        address,
+        homes.home_id,
+        image_urls,
+        users.name as user_name,
+        sum(value * weight) / sum(weight * 10) as score
       from categories_homes
-      join categories using(category_id)
-      join homes using(home_id)
-      join users using(user_id)
-      group by url, address, users.name, homes.home_id, image_urls;
-  `)
+             join categories using(category_id)
+             join homes using(home_id)
+             join users using(user_id)
+      group by url, address, users.name, homes.home_id, image_urls, url
+    ) as inner_query
+    group by url, address, home_id, image_urls;
+  `);
 
-  const result = await Promise.all(
+  const result: HomeWithImageUrls[] = await Promise.all(
     homes.rows.map(async (home: Home) => await homeWithImageUrls(home))
   );
 

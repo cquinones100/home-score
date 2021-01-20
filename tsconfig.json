@@ -9,7 +9,7 @@
   "files": [],
   // but building this project will build all of the following:
   "references": [
-    { "path": "./src" }
+    { "path": "./src" },
     { "path": "./packages/client" },
     { "path": "./packages/server" }
     // include all other sub-projects here  

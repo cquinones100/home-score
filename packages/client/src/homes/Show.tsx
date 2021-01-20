@@ -1,5 +1,5 @@
-import { ChangeEvent, FC, useEffect, useState } from "react";
-import Home from "../types/Home";
+import React, { ChangeEvent, FC, useEffect, useState } from "react";
+import Home from '../../../../src/types/HomeWithImageUrls';
 
 type Props = {
   match: {
@@ -10,6 +10,23 @@ type Props = {
   }
 };
 
+type HomeShowUrlConfigType = {
+  user_name?: string;
+  useRoot?: boolean
+};
+
+export const homeShowUrl = 
+  (id: number, { user_name, useRoot = true }: HomeShowUrlConfigType): string => {
+    let tail = '';
+    let root = 'http://localhost:3001';
+
+    if (user_name) { tail = '?user_name=${user_name}' }
+
+    if (!useRoot) { root = ''; }
+
+    return `${root}/homes/${id}${tail}`;
+  }
+
 const Show: FC<Props> = (props) => {
   const [home, setHome] = useState<Home>(null as unknown as Home);
 
@@ -17,8 +34,10 @@ const Show: FC<Props> = (props) => {
 
   useEffect(() => {
     const fetchHome = async () => {
+      console.log(homeShowUrl(id, { user_name }));
+
       const resp = 
-        await fetch(`/homes/${id}?user_name=${user_name}`, {
+        await fetch(homeShowUrl(id, { user_name }), {
           headers: {
             'Content-Type': 'application/json'
           },
@@ -30,7 +49,6 @@ const Show: FC<Props> = (props) => {
     }
 
     if (!home) fetchHome();
-
   }, [home, id, user_name])
 
   const onChangeCategory =
@@ -57,7 +75,7 @@ const Show: FC<Props> = (props) => {
           </thead>
           <tbody>
             {
-              home!.categories!.map((category, index) => {
+              home && home.categories?.map((category, index) => {
                 return (
                   <tr key={index}>
                     <td>{category.name}</td>
