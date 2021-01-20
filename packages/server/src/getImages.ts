@@ -1,8 +1,7 @@
 import { dbConnection } from ".";
-import knexConfig from "./knexfile";
 import scrapeImageUrls from "./scrapeImageUrls";
-import Home from "./types/Home";
-import HomeWithImageUrls from "./types/HomeWithImageUrls";
+import Home from '../../../src/types/Home';
+import HomeWithImageUrls from "../../../src/types/HomeWithImageUrls";
 
 const homeWithImageUrls =
   async (home: Home): Promise<HomeWithImageUrls> => {

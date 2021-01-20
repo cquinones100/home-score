@@ -2,7 +2,7 @@ import express from 'express';
 import knex from 'knex';
 import homeWithImageUrls from './getImages';
 import knexConfig from './knexfile';
-import Home from './types/Home';
+import Home from '../../../src/types/Home';
 
 export const dbConnection = knex(knexConfig['development']);
 
@@ -45,12 +45,16 @@ app.get('/homes/:id', async (req, res) => {
 app.get('/homes', async (req, res) => {
   const homes = await dbConnection.raw(`
     select
-      sum(value * weight) / sum(weight * 10) as score,
       url,
       address,
-      users.name as user_name,
       homes.home_id,
       image_urls
+      array_agg(
+        json_build_object(
+          users.name as user_name,
+          sum(value * weight) / sum(weight * 10) as score,
+        )
+      ) as scores
       from categories_homes
       join categories using(category_id)
       join homes using(home_id)

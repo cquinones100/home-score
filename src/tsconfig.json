@@ -1,0 +1,8 @@
+{
+ "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../dist/src",
+    "resolveJsonModule": true,
+    "composite": true
+  }
+}

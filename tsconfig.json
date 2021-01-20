@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "./dist/",
+    "resolveJsonModule": true,
+    "composite": true
+  },
+  // this root project has no source of its own
+  "files": [],
+  // but building this project will build all of the following:
+  "references": [
+    { "path": "./src" }
+    { "path": "./packages/client" },
+    { "path": "./packages/server" }
+    // include all other sub-projects here  
+  ]
+}
