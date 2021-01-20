@@ -3,12 +3,21 @@ import { dbConnection } from '.';
 import Home from '../../../src/types/Home';
 import HomeWithImageUrls from '../../../src/types/HomeWithImageUrls';
 import homeWithImageUrls from './getImages';
+import UserSession from './types/UserSession';
 
 const homesRouter = express.Router();
 
 homesRouter
   .route('/homes/:id')
   .get(async (req, res) => {
+    const homeCategories = await dbConnection.raw(`
+      select *
+      from categories
+      join users using (user_id)
+      join categories_homes using (category_id)
+      where user_id = ? and home_id = ?
+    `, [(req.session as UserSession).user.user_id, req.params.id])
+
     const home = await dbConnection.raw(`
       select
         distinct on (home_id)
@@ -39,6 +48,10 @@ homesRouter
       where home_id = ?
       group by url, address, users.name, home_id, image_urls;
     `, [req.params.id])
+
+    if (homeCategories.rows.length !== home.rows[0].categories) {
+      console.log('FAILLL')
+    };
 
     res.json(await homeWithImageUrls(home.rows[0]));
   });

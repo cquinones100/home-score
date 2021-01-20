@@ -1,5 +1,6 @@
 const serverFetch = (async (path, init) => {
   const args = {
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json'
     },
