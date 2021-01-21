@@ -4,6 +4,7 @@ import HomeWithImageUrls from '../../../src/types/HomeWithImageUrls';
 import dbConnection from './dbConnection';
 import homeWithImageUrls from './getImages';
 import getHomes from './queries/getHomes';
+import reconcileCategories from './reconcileCategories';
 import UserSession from './types/UserSession';
 
 const homesRouter = express.Router();
@@ -11,10 +12,12 @@ const homesRouter = express.Router();
 homesRouter
   .route('/homes/:id')
   .get(async (req, res) => {
-    const user_id = (req.session as UserSession).user.user_id;
+    const user_id = (req.session as UserSession)?.user?.user_id;
+
+    console.log(user_id)
 
     const homeCategories = await dbConnection.raw(`
-      select *
+      select *, categories.name as category_name
       from categories
       join users using (user_id)
       join categories_homes using (category_id)
@@ -24,11 +27,16 @@ homesRouter
     const home = await getHomes({ user_id })
       .where({ home_id: req.params.id }) as Home[];
 
-    if (homeCategories.rows.length !== home[0].categories) {
-      console.log('FAILLL')
-    };
+    if (!home[0] && req.params.id) {
+      await reconcileCategories(Number(req.params.id), user_id);
 
-    res.json(await homeWithImageUrls(home[0]));
+      const reconciledHome = await getHomes({ user_id })
+        .where({ home_id: req.params.id }) as Home[];
+
+      res.json(await homeWithImageUrls(reconciledHome[0]));
+    } else {
+      res.json(await homeWithImageUrls(home[0]));
+    }
   });
 
 homesRouter
