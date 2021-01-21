@@ -18,7 +18,7 @@ type HomeShowUrlConfigType = {
 };
 
 const fetchHome = async (id: number, user_name: string, cb: (arg: Home) => void) => {
-  const resp = 
+  const resp =
     await serverFetch(homeShowUrl(id, { user_name, useRoot: false }), {
       headers: {
         'Content-Type': 'application/json'
@@ -30,7 +30,7 @@ const fetchHome = async (id: number, user_name: string, cb: (arg: Home) => void)
   cb(json);
 }
 
-export const homeShowUrl = 
+export const homeShowUrl =
   (id: number, { user_name, useRoot = true }: HomeShowUrlConfigType): string => {
     let tail = '';
     let root = 'http://localhost:3001';
@@ -59,7 +59,7 @@ const Show: FC<Props> = (props) => {
           if (mapCategory.category_id === category.category_id) {
             return ({
               ...category,
-              score:  Number(e.target.value)
+              score: Number(e.target.value)
             })
           } else {
             return mapCategory;
@@ -72,41 +72,51 @@ const Show: FC<Props> = (props) => {
 
   const onBlurCategoryInput =
     (e: ChangeEvent<HTMLInputElement>, category: Category) => {
-    const updateCategory = async () => {
-      if (category) {
-        const resp = await serverFetch(
-          `/categories`, {
-          headers: { 'Content-Type': 'application/json' },
-          method: 'PUT',
-          body: JSON.stringify({
-            value: Number(e.target.value),
-            category_id: category.category_id,
-            user_id: category.user_id,
-            home_id: home.home_id
-          })
-        });
+      const updateCategory = async () => {
+        if (category) {
+          const resp = await serverFetch(
+            `/categories`, {
+            headers: { 'Content-Type': 'application/json' },
+            method: 'PUT',
+            body: JSON.stringify({
+              value: Number(e.target.value),
+              category_id: category.category_id,
+              user_id: category.user_id,
+              home_id: home.home_id
+            })
+          });
 
-        if (resp.ok) {
-          fetchHome(id, user_name, (json) => setHome(json))
-        } else {
-          alert('there was an error on the server side');
+          if (resp.ok) {
+            fetchHome(id, user_name, (json) => setHome(json))
+          } else {
+            alert('there was an error on the server side');
+          }
         }
-      }
+      };
+
+      updateCategory();
     };
 
-    updateCategory();
-  };
-
   if (home) {
+    // eslint-disable-next-line @typescript-eslint/no-var-requires
+    const screenshot = require(`../../../server/snapshots/${home.address}.png`);
+
     return (
-      <>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'auto',
+          height: '100vh'
+        }}
+      >
         <h1>{home.address}</h1>
         <div
           style={{
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'flex-start',
-            height: '20vh'
+            height: '20%'
           }}>
           {home.image_urls.map(imageUrl => {
             return (
@@ -119,46 +129,60 @@ const Show: FC<Props> = (props) => {
             )
           })}
         </div>
-        {
-          home && (home?.categories?.length || 0) > 0 && (
-            <table>
-              <thead>
-                <tr>
-                  <th>Category</th>
-                  <th>Weight</th>
-                  <th>Score</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  home && home.categories?.map((category, index) => {
-                    return (
-                      <tr key={index}>
-                        <td>{category.name}</td>
-                        <td>
-                          {category.weight}
-                        </td>
-                        <td>
-                          <input
-                            value={category.score}
-                            onChange={e => onChangeCategory(e, category)}
-                            onBlur={e => onBlurCategoryInput(e, category)}
-                          />
-                        </td>
-                      </tr>
-                    );
-                  })
-                }
-                <tr>
-                  <td />
-                  <td />
-                  <td>{home.score}</td>
-                </tr>
-              </tbody>
-            </table>
-          )
-        }
-      </>
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            overflow: 'auto'
+          }}
+        >
+          <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'center' }}>
+            {
+              home && (home?.categories?.length || 0) > 0 && (
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Category</th>
+                      <th>Weight</th>
+                      <th>Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      home && home.categories?.map((category, index) => {
+                        return (
+                          <tr key={index}>
+                            <td>{category.name}</td>
+                            <td>
+                              {category.weight}
+                            </td>
+                            <td>
+                              <input
+                                value={category.score}
+                                onChange={e => onChangeCategory(e, category)}
+                                onBlur={e => onBlurCategoryInput(e, category)}
+                              />
+                            </td>
+                          </tr>
+                        );
+                      })
+                    }
+                    <tr>
+                      <td />
+                      <td />
+                      <td>{home.score}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              )
+            }
+          </div>
+          <div style={{ overflow: 'auto', flexGrow: 1 }}>
+            <img src={screenshot}/>
+          </div>
+        </ div>
+      </div>
     )
   }
 

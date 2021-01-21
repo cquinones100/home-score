@@ -7,7 +7,6 @@ const homeWithImageUrls =
   async (home: Home): Promise<HomeWithImageUrls> => {
     let image_urls;
 
-    console.log(home);
     if (!home.image_urls) {
       image_urls = await scrapeImageUrls(home.url, home.address);
 

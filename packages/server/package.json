@@ -30,6 +30,7 @@
     "client": "cd ./client && yarn start",
     "build": "tsc",
     "start": "node dist/index.js",
-    "console": "ts-node console.ts"
+    "console": "ts-node console.ts",
+    "snapshots": "ts-node src/tasks/saveSnapshots.ts"
   }
 }

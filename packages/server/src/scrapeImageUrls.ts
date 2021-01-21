@@ -1,4 +1,5 @@
 import puppeteer from 'puppeteer';
+import saveSnapshot from './saveSnapshot';
 
 const scrapeImageUrls = async (url: string, address: string): Promise<string[]> => {
   const browser = await puppeteer.launch({
@@ -17,6 +18,8 @@ const scrapeImageUrls = async (url: string, address: string): Promise<string[]> 
   const srcs = await page.$$eval(`img.landscape`, images => {
     return images.map(image => image.getAttribute('src'));
   });
+
+  saveSnapshot(page, url, address);
 
   await browser.close();
 
