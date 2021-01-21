@@ -1,7 +1,7 @@
-import { dbConnection } from ".";
 import scrapeImageUrls from "./scrapeImageUrls";
 import Home from '../../../src/types/Home';
 import HomeWithImageUrls from "../../../src/types/HomeWithImageUrls";
+import dbConnection from "./dbConnection";
 
 const homeWithImageUrls =
   async (home: Home): Promise<HomeWithImageUrls> => {

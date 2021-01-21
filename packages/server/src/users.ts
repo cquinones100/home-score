@@ -1,5 +1,5 @@
 import express from 'express';
-import { dbConnection } from '.';
+import dbConnection from './dbConnection';
 import UserSession from './types/UserSession';
 
 const usersRouter = express.Router();

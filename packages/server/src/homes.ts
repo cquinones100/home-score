@@ -1,7 +1,7 @@
 import express from 'express';
-import { dbConnection } from '.';
 import Home from '../../../src/types/Home';
 import HomeWithImageUrls from '../../../src/types/HomeWithImageUrls';
+import dbConnection from './dbConnection';
 import homeWithImageUrls from './getImages';
 import UserSession from './types/UserSession';
 
