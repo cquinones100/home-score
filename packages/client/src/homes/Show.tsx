@@ -1,5 +1,7 @@
 import React, { ChangeEvent, FC, useEffect, useState } from "react";
+import Category from "../../../../src/types/Category";
 import Home from '../../../../src/types/HomeWithImageUrls';
+import serverFetch from "../utils/serverFetch";
 
 type Props = {
   match: {
@@ -14,6 +16,19 @@ type HomeShowUrlConfigType = {
   user_name?: string;
   useRoot?: boolean
 };
+
+const fetchHome = async (id: number, user_name: string, cb: (arg: Home) => void) => {
+  const resp = 
+    await serverFetch(homeShowUrl(id, { user_name, useRoot: false }), {
+      headers: {
+        'Content-Type': 'application/json'
+      },
+    });
+
+  const json = await resp.json();
+
+  cb(json);
+}
 
 export const homeShowUrl = 
   (id: number, { user_name, useRoot = true }: HomeShowUrlConfigType): string => {
@@ -33,28 +48,54 @@ const Show: FC<Props> = (props) => {
   const { id, user_name } = props.match.params;
 
   useEffect(() => {
-    const fetchHome = async () => {
-      console.log(homeShowUrl(id, { user_name }));
-
-      const resp = 
-        await fetch(homeShowUrl(id, { user_name }), {
-          headers: {
-            'Content-Type': 'application/json'
-          },
-        });
-
-      const json = await resp.json();
-
-      setHome(json);
-    }
-
-    if (!home) fetchHome();
+    if (!home) fetchHome(id, user_name, (json) => setHome(json));
   }, [home, id, user_name])
 
   const onChangeCategory =
-    (e: ChangeEvent<HTMLInputElement>, attribute: 'weight' | 'score') => {
-      console.log('coming soon!')
+    (e: ChangeEvent<HTMLInputElement>, category: Category) => {
+      const newHome = {
+        ...home,
+        categories: home?.categories?.map((mapCategory) => {
+          if (mapCategory.category_id === category.category_id) {
+            return ({
+              ...category,
+              score:  Number(e.target.value)
+            })
+          } else {
+            return mapCategory;
+          }
+        })
+      };
+
+      setHome(newHome);
     };
+
+  const onBlurCategoryInput =
+    (e: ChangeEvent<HTMLInputElement>, category: Category) => {
+    const updateCategory = async () => {
+      if (category) {
+        const resp = await serverFetch(
+          `/categories`, {
+          headers: { 'Content-Type': 'application/json' },
+          method: 'PUT',
+          body: JSON.stringify({
+            value: Number(e.target.value),
+            category_id: category.category_id,
+            user_id: category.user_id,
+            home_id: home.home_id
+          })
+        });
+
+        if (resp.ok) {
+          fetchHome(id, user_name, (json) => setHome(json))
+        } else {
+          alert('there was an error on the server side');
+        }
+      }
+    };
+
+    updateCategory();
+  };
 
   if (home) {
     return (
@@ -95,15 +136,13 @@ const Show: FC<Props> = (props) => {
                       <tr key={index}>
                         <td>{category.name}</td>
                         <td>
-                          <input
-                            value={category.weight}
-                            onChange={e => onChangeCategory(e, 'weight')}
-                          />
+                          {category.weight}
                         </td>
                         <td>
                           <input
-                            value={category.weight}
-                            onChange={e => onChangeCategory(e, 'score')}
+                            value={category.score}
+                            onChange={e => onChangeCategory(e, category)}
+                            onBlur={e => onBlurCategoryInput(e, category)}
                           />
                         </td>
                       </tr>

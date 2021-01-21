@@ -17,8 +17,6 @@ usersRouter
   .post(async (req, res) => {
     const { name } = req.body;
 
-    console.log(req.body)
-
     const user = await dbConnection('users').where({ name });
 
     (req.session as UserSession).user = user[0];
@@ -30,5 +28,11 @@ usersRouter
     }
   });
 
+usersRouter
+  .route('/users/:id')
+  .put(async (req, res) => {
+    console.log(req.params.id)
+    console.log(req.body)
+  });
 
 export default usersRouter;
