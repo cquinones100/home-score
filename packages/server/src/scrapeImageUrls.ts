@@ -15,15 +15,31 @@ const scrapeImageUrls = async (url: string, address: string): Promise<string[]> 
   const page = await browser.newPage();
   await page.goto(url);
 
-  const srcs = await page.$$eval(`img.landscape`, images => {
-    return images.map(image => image.getAttribute('src'));
+  await saveSnapshot(page, url, address);
+
+  const srcs = await page.$$eval(`span#MBImage0`, images => {
+    const bigImages = images.map((image, index) => {
+      if (index === 0) {
+        (image as HTMLLinkElement).click();
+      }
+
+      return image.getAttribute('src')
+    });
+
+    return bigImages;
   });
 
-  saveSnapshot(page, url, address);
+  const smallSrcs = await page.$$eval(`img[alt="image"]`, (smallImages) => {
+    return smallImages.map(smallImage => {
+      return smallImage.getAttribute('src') as string;
+    })
+  });
+
+  console.log(smallSrcs);
 
   await browser.close();
 
-  return srcs as string[];
+  return srcs.concat(smallSrcs) as string[];
 };
 
 export default scrapeImageUrls;

@@ -14,19 +14,25 @@ const saveSnapshots = async () => {
     ]
   });
 
-  const homes = await getHomes();
+  try {
+    const homes = await getHomes();
 
-  await Promise.all(
-    homes.map(async (home: Home) => {
-      const page = await browser.newPage();
-      await page.goto(home.url);
+    await Promise.all(
+      homes.map(async (home: Home) => {
+        const page = await browser.newPage();
+        await page.goto(home.url);
 
-      saveSnapshot(page, home.url, home.address);
-    })
-  );
+        return await saveSnapshot(page, home.url, home.address);
+      })
+    );
 
-  browser.close();
-  console.log('Done');
+    console.log('Done');
+  } catch(e) {
+    process.exit();
+  }
+  finally {
+    browser.close();
+  }
 };
 
 
