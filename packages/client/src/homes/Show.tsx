@@ -59,7 +59,7 @@ const Show: FC<Props> = (props) => {
           if (mapCategory.category_id === category.category_id) {
             return ({
               ...category,
-              score: Number(e.target.value)
+              score: e.target.value as unknown as number
             })
           } else {
             return mapCategory;
@@ -171,7 +171,7 @@ const Show: FC<Props> = (props) => {
                     <tr>
                       <td />
                       <td />
-                      <td>{home.score}</td>
+                      <td>{home.score * 10}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -179,7 +179,7 @@ const Show: FC<Props> = (props) => {
             }
           </div>
           <div style={{ overflow: 'auto', flexGrow: 1 }}>
-            <img src={screenshot}/>
+            <img src={screenshot} style={{ width: '100%' }} />
           </div>
         </ div>
       </div>
