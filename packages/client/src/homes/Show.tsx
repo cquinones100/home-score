@@ -99,7 +99,7 @@ const Show: FC<Props> = (props) => {
 
   if (home) {
     // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const screenshot = require(`../../../server/snapshots/${home.address}.png`);
+    const screenshot = require(`../../../server/snapshots/${home.address}/screenshot1.png`);
 
     return (
       <div

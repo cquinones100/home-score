@@ -5,6 +5,7 @@ import dbConnection from './dbConnection';
 import homeWithImageUrls from './getImages';
 import getHomes from './queries/getHomes';
 import reconcileCategories from './reconcileCategories';
+import scrapeImageUrls from './scrapeImageUrls';
 import UserSession from './types/UserSession';
 
 const homesRouter = express.Router();
@@ -13,42 +14,35 @@ homesRouter
   .route('/homes/:id')
   .get(async (req, res) => {
     const user_id = (req.session as UserSession)?.user?.user_id;
+    const { id: home_id } = req.params;
 
-    console.log(user_id)
+    reconcileCategories(Number(home_id), user_id);
 
-    const homeCategories = await dbConnection.raw(`
-      select *, categories.name as category_name
-      from categories
-      join users using (user_id)
-      join categories_homes using (category_id)
-      where user_id = ? and home_id = ?
-    `, [user_id, req.params.id])
+    const home = (await getHomes({ user_id }))[0];
 
-    const home = await getHomes({ user_id })
-      .where({ home_id: req.params.id }) as Home[];
+    if (!home) return res.sendStatus(404);
 
-    if (!home[0] && req.params.id) {
-      await reconcileCategories(Number(req.params.id), user_id);
+    let image_urls = await dbConnection.select('url')
+      .from('home_image_urls')
+      .where({ home_id });
 
-      const reconciledHome = await getHomes({ user_id })
-        .where({ home_id: req.params.id }) as Home[];
-
-      res.json(await homeWithImageUrls(reconciledHome[0]));
-    } else {
-      res.json(await homeWithImageUrls(home[0]));
+    if (image_urls.length === 0) {
+      image_urls = await scrapeImageUrls(home.url, home.address);
     }
+
+    res.json({
+      ...home,
+      image_urls: image_urls.map(({ url }) => url),
+    });
   });
 
 homesRouter
   .route('/homes')
   .get(async (req, res) => {
-    const homes = await getHomes();
+    const user_id = (req.session as UserSession)?.user?.user_id;
+    const homes = await getHomes({ user_id })
 
-    const result: HomeWithImageUrls[] = await Promise.all(
-      homes.map(async (home: Home) => await homeWithImageUrls(home))
-    );
-
-    res.json(result);
+    res.json(homes);
   })
   .post(async (req, res) => {
     const { url, address } = req.body;

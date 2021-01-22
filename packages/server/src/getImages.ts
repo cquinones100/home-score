@@ -2,19 +2,21 @@ import scrapeImageUrls from "./scrapeImageUrls";
 import Home from '../../../src/types/Home';
 import HomeWithImageUrls from "../../../src/types/HomeWithImageUrls";
 import dbConnection from "./dbConnection";
+import insertHomeImageUrls from "./insertHomeImageUrls";
 
 const homeWithImageUrls =
   async (home: Home): Promise<HomeWithImageUrls> => {
     let image_urls;
 
-    if (!home.image_urls) {
-      image_urls = await scrapeImageUrls(home.url, home.address);
+    const image_url_records = await dbConnection('home_image_urls')
+      .where({ home_id: home.home_id })
 
-      await dbConnection('homes')
-        .where({ home_id: home.home_id })
-        .update({ image_urls: image_urls.join(',') });
+    if (image_url_records.length = 0) {
+      const urls = await scrapeImageUrls(home.url, home.address);
+
+      image_urls = await insertHomeImageUrls(home, urls);
     } else {
-      image_urls = home.image_urls.split(',');
+      image_urls = image_url_records.map(({ url }) => url);
     }
 
     return {

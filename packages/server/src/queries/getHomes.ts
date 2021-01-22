@@ -12,7 +12,6 @@ const getHomes = ({ user_id }: { user_id?: number } = {}) => {
       url,
       address,
       home_id,
-      image_urls,
       array_agg(
         jsonb_build_object(
           'user_name', user_name,
@@ -20,13 +19,13 @@ const getHomes = ({ user_id }: { user_id?: number } = {}) => {
         )
       ) as scores,
       avg(score) as score,
-      categories
+      categories,
+      array_agg(home_image_urls_url) as image_urls
     from (
       select
-        url,
+        homes.url,
         address,
         homes.home_id,
-        image_urls,
         users.name as user_name,
         sum(value * weight) / sum(weight * 10) as score,
         case
@@ -44,15 +43,18 @@ const getHomes = ({ user_id }: { user_id?: number } = {}) => {
             )
             order by categories.name
           )
-        end as categories
+        end as categories,
+        home_image_urls.url as home_image_urls_url
       from homes
         left join categories_homes using(home_id)
         left join categories using(category_id)
         left join users using(user_id)
+        left join home_image_urls using(home_id)
       ${userIdQuery === null ? '' : '?'}
-      group by url, address, users.name, homes.home_id, image_urls, url
+      group by homes.url, address, users.name, homes.home_id, home_image_urls.url
     ) as inner_query
-    group by url, address, home_id, image_urls, categories
+    where home_image_urls_url is not null
+    group by url, address, home_id, categories
   `, bindings)
 
   return (

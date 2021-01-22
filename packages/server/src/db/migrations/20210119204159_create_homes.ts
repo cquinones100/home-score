@@ -5,7 +5,7 @@ export async function up(knex: Knex): Promise<void> {
     table.increments('home_id');
     table.string('address');
     table.string('url');
-  })
+  });
 }
 
 

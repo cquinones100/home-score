@@ -35,8 +35,6 @@ const scrapeImageUrls = async (url: string, address: string): Promise<string[]> 
     })
   });
 
-  console.log(smallSrcs);
-
   await browser.close();
 
   return srcs.concat(smallSrcs) as string[];

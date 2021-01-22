@@ -22,9 +22,6 @@ categoriesRouter
           home_id
         }))[0]
 
-      console.log(category)
-      console.log(updateValues);
-
       const updateResult = await dbConnection('categories_homes')
         .where({
           home_id: Number(home_id),
