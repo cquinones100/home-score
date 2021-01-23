@@ -40,7 +40,7 @@ const Index: FC = () => {
     })
   };
   
-  const handleFormAddSubmit = async (e: FormEvent<HTMLInputElement>) => {
+  const handleFormAddSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const resp = await serverFetch('/homes', {
@@ -60,7 +60,7 @@ const Index: FC = () => {
 
   return (
     <>
-      <table>
+      <table className='table'>
         <thead>
           <tr>
             <th>Address</th>
@@ -78,7 +78,7 @@ const Index: FC = () => {
                     <td>{home.address}</td>
                     <td><a href={home.url}>{home.url}</a></td>
                     <td>
-                      {home.score ? (home.score * 100).toFixed(2) : 'No Score Yet'}
+                      {home.score ? (home.score * 10).toFixed(2) : 'No Score Yet'}
                     </td>
                     <td>
                       <Link to={homeShowUrl(home.home_id, { useRoot: false })}>
@@ -92,24 +92,38 @@ const Index: FC = () => {
           }
         </tbody>
       </table>
-      { !addHome && <button onClick={handleAddOnClick}>Add Home</button> }
+      { !addHome && (
+        <button
+          type='submit'
+          className='btn btn-primary'
+          onClick={handleAddOnClick}
+        >
+          Add Home
+        </button>
+      ) }
       { addHome && (
         <form onSubmit={handleFormAddSubmit}>
-          <label htmlFor='address'>Address</label>
-          <input
-            id='address'
-            name='address'
-            value={addHome.address || ''}
-            onChange={e => { setAddHome({ ...addHome, address: e.target.value })}}
-          />
-          <label htmlFor='url'>URL</label>
-          <input
-            id='url'
-            name='url'
-            value={addHome.url || ''}
-            onChange={e => { setAddHome({ ...addHome, url: e.target.value })}}
-          />
-          <button type='submit'>Submit</button>
+          <div className='mb-2'>
+            <label htmlFor='address' className='form-label'>Address</label>
+            <input
+              id='address'
+              name='address'
+              value={addHome.address || ''}
+              onChange={e => { setAddHome({ ...addHome, address: e.target.value })}}
+              className='form-control'
+            />
+          </div>
+          <div className='mb-2'>
+            <label htmlFor='url' className='form-label'>URL</label>
+            <input
+              id='url'
+              name='url'
+              value={addHome.url || ''}
+              onChange={e => { setAddHome({ ...addHome, url: e.target.value })}}
+              className='form-control'
+            />
+          </div>
+          <button type='submit' className='btn btn-primary'>Submit</button>
         </form>
       )}
     </>

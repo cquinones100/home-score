@@ -15,7 +15,7 @@ function App() {
   return (
     <Router>
       <Nav />
-      <div className='container'>
+      <div className='container container-fluid'>
         <Switch>
           <Route path='/login' component={Login} />
           <PrivateRoute

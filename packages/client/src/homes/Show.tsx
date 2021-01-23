@@ -107,27 +107,30 @@ const Show: FC<Props> = (props) => {
           display: 'flex',
           flexDirection: 'column',
           overflow: 'auto',
-          height: '100vh'
+          height: '90vh'
         }}
       >
         <h1>{home.address}</h1>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'flex-start',
-            height: '20%'
-          }}>
-          {home.image_urls.map(imageUrl => {
-            return (
-              <img
-                key={imageUrl}
-                alt={home.address}
-                src={imageUrl}
-                style={{ objectFit: 'cover', width: '33%' }}
-              />
-            )
-          })}
+        <div style={{ width: '100%', height: '20%' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'flex-start',
+              height: '100%',
+              overflowX: 'auto'
+            }}>
+            {home.image_urls.filter(imageUrl => imageUrl !== null).map(imageUrl => {
+              return (
+                <img
+                  key={imageUrl}
+                  alt={home.address}
+                  src={imageUrl}
+                  style={{ objectFit: 'cover', width: '33%' }}
+                />
+              )
+            })}
+          </div>
         </div>
         <div
           style={{
@@ -137,44 +140,99 @@ const Show: FC<Props> = (props) => {
             overflow: 'auto'
           }}
         >
-          <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'center' }}>
+          <div
+            style={{
+              display: 'flex',
+              width: '50%',
+              flexDirection: 'column',
+              height: '100%'
+            }}
+          >
+            <h1 style={{ textAlign: 'right' }}>
+              Current Score {(home.score * 10).toFixed(2)}
+            </h1>
             {
               home && (home?.categories?.length || 0) > 0 && (
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Category</th>
-                      <th>Weight</th>
-                      <th>Score</th>
-                    </tr>
-                  </thead>
-                  <tbody>
+                <>
+                  <div style={{ display: 'flex', flexDirection: 'row'}}>
+                    <div style={{ width: '33%'}}>
+                      Category
+                    </div>
+                    <div style={{ width: '33%'}}>
+                      Weight
+                    </div>
+                    <div style={{ width: '33%'}}>
+                      Score
+                    </div>
+                  </div>
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      flexGrow: 1
+                    }}
+                  >
                     {
                       home && home.categories?.map((category, index) => {
                         return (
-                          <tr key={index}>
-                            <td>{category.name}</td>
-                            <td>
+                          <div
+                            key={index}
+                            style={{
+                              display: 'flex',
+                              flexDirection: 'row',
+                              overflow: 'auto'
+                            }}
+                          >
+                            <div style={{ width: '33%'}}>
+                              {category.name}
+                            </div>
+                            <div style={{ width: '33%'}}>
                               {category.weight}
-                            </td>
-                            <td>
+                            </div>
+                            <div style={{ width: '33%'}}>
                               <input
+                                style={{ width: '100%' }}
                                 value={category.score}
                                 onChange={e => onChangeCategory(e, category)}
                                 onBlur={e => onBlurCategoryInput(e, category)}
                               />
-                            </td>
-                          </tr>
+                            </div>
+                          </div>
                         );
                       })
                     }
-                    <tr>
-                      <td />
-                      <td />
-                      <td>{home.score * 10}</td>
-                    </tr>
-                  </tbody>
-                </table>
+                  </div>
+                </>
+                // <table className='table'>
+                //   <thead style={{ display: 'block' }}>
+                //     <tr>
+                //       <th>Category</th>
+                //       <th>Weight</th>
+                //       <th>Score</th>
+                //     </tr>
+                //   </thead>
+                //   <tbody style={{ display: 'block', overflow: 'auto' }}>
+                //     {
+                //       home && home.categories?.map((category, index) => {
+                //         return (
+                //           <tr key={index}>
+                //             <td>{category.name}</td>
+                //             <td>
+                //               {category.weight}
+                //             </td>
+                //             <td>
+                //               <input
+                //                 value={category.score}
+                //                 onChange={e => onChangeCategory(e, category)}
+                //                 onBlur={e => onBlurCategoryInput(e, category)}
+                //               />
+                //             </td>
+                //           </tr>
+                //         );
+                //       })
+                //     }
+                //   </tbody>
+                // </table>
               )
             }
           </div>
