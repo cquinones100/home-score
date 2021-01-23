@@ -43,20 +43,20 @@ const Nav = () => {
         <div className='collapse navbar-collapse' id='navbarNav'>
           <ul className='navbar-nav'>
             <li className='nav-item'>
-              <Link
+              <a
                 className={`nav-link ${location.pathname === '/homes' && 'active'}`}
-                to='/homes'
+		onClick={() => { history.push('/homes') } }
               >
                 Homes
-              </Link>
+              </a>
             </li>
             <li className='nav-item'>
-              <Link
+              <a
                 className={`nav-link ${location.pathname === '/categories' && 'active'}`}
-                to='/categories'
+		onClick={() => { history.push('/categories') } }
               >
                 Categories
-              </Link>
+              </a>
             </li>
             <li className='nav-item'>
               <button type='button' className='btn btn-warning' onClick={signOut}>

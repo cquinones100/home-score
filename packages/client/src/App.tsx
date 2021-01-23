@@ -15,18 +15,19 @@ import Signup from './Signup';
 
 function App() {
   return (
-    <Router>
+    <Router basename='/home-score'>
       <Nav />
       <div className='container container-fluid'>
         <Switch>
           <Route path='/login' component={Login} />
           <Route path='/signup' component={Signup} />
+          <PrivateRoute path='/' component={CategoryIndex} />
           <PrivateRoute
             path={'/homes/:id'}
             component={Show as unknown as FC<RouterProps>}
           />
           <PrivateRoute path='/homes' component={Index} />
-          <PrivateRoute path='/Categories' component={CategoryIndex} />
+          <PrivateRoute path='/categories' component={CategoryIndex} />
         </Switch>
       </div>
     </Router>

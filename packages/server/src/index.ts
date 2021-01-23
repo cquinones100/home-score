@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import homesRouter from './homes';
 import bodyParser from 'body-parser';
@@ -8,12 +8,20 @@ import currentRouter from './current';
 import categoriesRouter from './categories';
 
 var corsOptions = {
-  origin: 'http://localhost:3002',
+  origin: 'https://cquinones.com',
   optionsSuccessStatus: 200,
   credentials: true
 }
 
 const app = express();
+
+const loggingMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  console.log(`received request as ${req.path}`)
+
+  next();
+};
+
+app.use(loggingMiddleware);
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());

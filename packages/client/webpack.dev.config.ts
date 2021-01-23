@@ -52,7 +52,8 @@ const config: Configuration = {
     hot: true
   },
   output: {
-    publicPath: '/',
+    path: path.resolve(__dirname, 'dist/home-score'),
+    publicPath: '/home-score/',
     filename: '[name].js',
     chunkFilename: '[name].js',
   }

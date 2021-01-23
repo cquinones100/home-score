@@ -33,7 +33,7 @@ const fetchHome = async (id: number, user_name: string, cb: (arg: Home) => void)
 export const homeShowUrl =
   (id: number, { user_name, useRoot = true }: HomeShowUrlConfigType): string => {
     let tail = '';
-    let root = 'http://localhost:3001';
+    let root = 'https://cquinones.com/home-score/api/';
 
     if (user_name) { tail = '?user_name=${user_name}' }
 

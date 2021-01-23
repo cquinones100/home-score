@@ -6,7 +6,7 @@ const serverFetch = (async (path, init) => {
     },
     ...init
   }
-  return await fetch(`http://localhost:3001${path}`, args);
+  return await fetch(`https://cquinones.com/home-score/api${path}`, args);
 }) as typeof fetch;
 
 export default serverFetch;

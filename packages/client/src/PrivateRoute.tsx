@@ -7,6 +7,10 @@ const PrivateRoute: FC<{ component: FC<RouterProps>, path: string }> =
     const [fetching, setFetching] = useState<boolean>(true);
     const [authenticated, setAuthenticated] = useState<boolean>(null as unknown as boolean);
 
+    console.log('testing private router');
+
+    console.log(Component);
+
     useEffect(() => {
       const fetchAuthentication = async () => {
         const resp = await serverFetch('/current');
