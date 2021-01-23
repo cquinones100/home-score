@@ -10,6 +10,7 @@ import Show from './homes/Show';
 import Login from './Login';
 import Nav from './Nav';
 import PrivateRoute from './PrivateRoute';
+import CategoryIndex from './categories/Index';
 
 function App() {
   return (
@@ -23,6 +24,7 @@ function App() {
             component={Show as unknown as FC<RouterProps>}
           />
           <PrivateRoute path='/homes' component={Index} />
+          <PrivateRoute path='/Categories' component={CategoryIndex} />
         </Switch>
       </div>
     </Router>
