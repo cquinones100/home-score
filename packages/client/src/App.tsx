@@ -11,6 +11,7 @@ import Login from './Login';
 import Nav from './Nav';
 import PrivateRoute from './PrivateRoute';
 import CategoryIndex from './categories/Index';
+import Signup from './Signup';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
       <div className='container container-fluid'>
         <Switch>
           <Route path='/login' component={Login} />
+          <Route path='/signup' component={Signup} />
           <PrivateRoute
             path={'/homes/:id'}
             component={Show as unknown as FC<RouterProps>}

@@ -1,16 +1,17 @@
-import React, { ChangeEvent, FC, useEffect, useState } from 'react';
-import serverFetch from './utils/serverFetch';
-import User from '../../../src/types/User';
-import { Link, Redirect } from 'react-router-dom';
+import React, { ChangeEvent, FC, useState } from "react";
+import { Redirect } from "react-router-dom";
+import User from "../../../src/types/User";
+import serverFetch from "./utils/serverFetch";
 
 type UserWithPassword = {
   name: string;
   password: string;
 };
 
-const Login: FC = () => {
+const Signup: FC = () => {
   const [user, setUser] =
     useState<UserWithPassword>({ name: '', password: ''})
+
   const [authenticatedUser, setAuthenticatedUser] =
     useState(null as unknown as User);
 
@@ -18,7 +19,7 @@ const Login: FC = () => {
     e.preventDefault();
 
     if (user) {
-      const resp = await serverFetch('/users/login', {
+      const resp = await serverFetch('/users', {
         method: 'POST',
         body: JSON.stringify(user)
       })
@@ -37,7 +38,7 @@ const Login: FC = () => {
 
   return (
     <>
-      <h1>Who are you?</h1>
+      <h1>New User</h1>
       <form onSubmit={handleFormAddSubmit}>
         <div className='mb-2'>
           <label htmlFor='name' className='form-label'>Name</label>
@@ -62,9 +63,8 @@ const Login: FC = () => {
         </div>
         <button type='submit' className='btn btn-primary'>Submit</button>
       </form>
-      <Link to='/signup'>Signup</Link>
     </>
   );
 };
 
-export default Login;
+export default Signup;

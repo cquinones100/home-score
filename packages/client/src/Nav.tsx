@@ -1,10 +1,29 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useHistory, useLocation } from 'react-router-dom';
+import serverFetch from './utils/serverFetch';
 
 const Nav = () => {
   const location = useLocation();
+  const history = useHistory();
 
-  console.log(location);
+  const signOut = async (e: MouseEvent) => {
+    e.preventDefault();
+
+    const userResp = await serverFetch('/current');
+
+    console.log(userResp);
+    const user = await userResp.json();
+
+    const resp = await serverFetch(`/users/${user.user_id}`, {
+      method: 'DELETE'
+    });
+
+    console.log(resp);
+
+    if (resp.ok) {
+      history.push('/login')
+    }
+  };
 
   return (
     <nav className='navbar navbar-expand-lg navbar-light bg-light'>
@@ -38,6 +57,11 @@ const Nav = () => {
               >
                 Categories
               </Link>
+            </li>
+            <li className='nav-item'>
+              <button type='button' className='btn btn-warning' onClick={signOut}>
+                Sign Out
+              </button>
             </li>
           </ul>
         </div>
