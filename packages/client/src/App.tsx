@@ -27,6 +27,7 @@ function App() {
           />
           <PrivateRoute path='/homes' component={Index} />
           <PrivateRoute path='/Categories' component={CategoryIndex} />
+          <PrivateRoute path='/' component={CategoryIndex} />
         </Switch>
       </div>
     </Router>

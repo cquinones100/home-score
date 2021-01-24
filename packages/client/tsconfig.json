@@ -6,7 +6,6 @@
       "dom.iterable",
       "esnext"
     ],
-    "module": "commonjs",
     "rootDir": "src",
     "outDir": "../../dist/client",
     "allowJs": true,
