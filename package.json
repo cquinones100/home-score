@@ -3,5 +3,9 @@
   "name": "home-score",
   "workspaces": [
     "packages/*"
-  ]
+  ],
+  "scripts": {
+    "client:dev": "yarn workspace home-score-react start",
+    "server:dev": "yarn workspace home-score-server dev"
+  }
 }

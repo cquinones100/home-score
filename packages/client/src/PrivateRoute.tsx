@@ -21,6 +21,8 @@ const PrivateRoute: FC<{ component: FC<RouterProps>, path: string }> =
 
     if (fetching) return <div />;
 
+    console.log('hiii')
+
     return (
       <Route {...rest} render={(props) => (
         authenticated === true

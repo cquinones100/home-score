@@ -52,8 +52,7 @@ const config: Configuration = {
     hot: true
   },
   output: {
-    publicPath: '/',
-    filename: '[name].js',
+    filename: './[name].js',
     chunkFilename: '[name].js',
   }
 };
