@@ -6,7 +6,7 @@ const knexConfig = {
     connection: {
       host: '127.0.0.1',
       database: 'home-score',
-      user: 'postrgres',
+      user: 'postgres',
     },
     migrations: {
       extension: 'ts',

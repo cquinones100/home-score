@@ -1,12 +1,13 @@
 import express from 'express';
-import Home from '../../../src/types/Home';
-import HomeWithImageUrls from '../../../src/types/HomeWithImageUrls';
 import dbConnection from './dbConnection';
-import homeWithImageUrls from './getImages';
 import getHomes from './queries/getHomes';
 import reconcileCategories from './reconcileCategories';
 import scrapeImageUrls from './scrapeImageUrls';
 import UserSession from './types/UserSession';
+
+type HomeImageUrl = {
+  url: string;
+}
 
 const homesRouter = express.Router();
 
@@ -22,8 +23,8 @@ homesRouter
 
     if (!home) return res.sendStatus(404);
 
-    let image_urls = await dbConnection.select('url')
-      .from('home_image_urls')
+    let image_urls = await dbConnection('home_image_urls')
+      .select('url')
       .where({ home_id });
 
     if (image_urls.length === 0) {
@@ -32,7 +33,7 @@ homesRouter
 
     res.json({
       ...home,
-      image_urls: image_urls.map(({ url }) => url),
+      image_urls: (image_urls as HomeImageUrl[]).map(({ url }) => url),
     });
   });
 
