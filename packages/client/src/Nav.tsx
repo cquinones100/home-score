@@ -27,7 +27,7 @@ const Nav = () => {
 
   return (
     <nav className='navbar navbar-expand-lg navbar-light bg-light'>
-      <div className='container-fluid'>
+      <div className='container container-fluid'>
         <a className='navbar-brand' href='#'>Home Score</a>
         <button
           className='navbar-toggler'

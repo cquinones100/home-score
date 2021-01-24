@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from "react";
 import { Redirect, Route, RouterProps } from "react-router-dom";
+import Nav from "./Nav";
 import serverFetch from "./utils/serverFetch";
 
 const PrivateRoute: FC<{ component: FC<RouterProps>, path: string }> =
@@ -22,11 +23,16 @@ const PrivateRoute: FC<{ component: FC<RouterProps>, path: string }> =
     if (fetching) return <div />;
 
     return (
-      <Route {...rest} render={(props) => (
-        authenticated === true
-          ? <Component {...props} />
-          : <Redirect to='/login' />
-      )} />
+      <>
+        <Nav />
+        <div className='container container-fluid'>
+          <Route {...rest} render={(props) => (
+            authenticated === true
+              ? <Component {...props} />
+              : <Redirect to='/login' />
+          )} />
+        </div>
+      </>
     );
   }
 
