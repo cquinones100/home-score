@@ -1,6 +1,7 @@
-import React, { ChangeEvent, FC, useState } from "react";
+import React, { ChangeEvent, FC, RefObject, useState } from "react";
 import { Redirect } from "react-router-dom";
 import User from "../../../src/types/User";
+import useInputFocus from "./hooks/useInputFocus";
 import serverFetch from "./utils/serverFetch";
 
 type UserWithPassword = {
@@ -32,12 +33,22 @@ const Signup: FC = () => {
     }
   };
 
+  const inputRef = useInputFocus();
+
   if (authenticatedUser) {
     return <Redirect to='/homes' />
   }
 
   return (
-    <>
+    <div
+      className='container container-fluid pt-5'
+      style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}
+    >
       <h1>New User</h1>
       <form onSubmit={handleFormAddSubmit}>
         <div className='mb-2'>
@@ -48,6 +59,7 @@ const Signup: FC = () => {
             value={user.name || ''}
             onChange={e => { setUser({ ...user, name: e.target.value })}}
             className='form-control'
+            ref={inputRef as RefObject<HTMLInputElement>}
           />
         </div>
         <div className='mb-2'>
@@ -63,7 +75,7 @@ const Signup: FC = () => {
         </div>
         <button type='submit' className='btn btn-primary'>Submit</button>
       </form>
-    </>
+    </div>
   );
 };
 

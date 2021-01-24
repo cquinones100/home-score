@@ -1,7 +1,8 @@
-import React, { ChangeEvent, FC, useEffect, useState } from 'react';
+import React, { ChangeEvent, FC, MutableRefObject, RefObject, useEffect, useState } from 'react';
 import serverFetch from './utils/serverFetch';
 import User from '../../../src/types/User';
 import { Link, Redirect } from 'react-router-dom';
+import useInputFocus from './hooks/useInputFocus';
 
 type UserWithPassword = {
   name: string;
@@ -31,13 +32,23 @@ const Login: FC = () => {
     }
   };
 
+  const inputRef = useInputFocus();
+
   if (authenticatedUser) {
     console.log('hi')
     return <Redirect to='/homes' />
   }
 
   return (
-    <>
+    <div
+      className='container container-fluid pt-5'
+      style={{
+        height: '100vh',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center'
+      }}
+    >
       <h1>Who are you?</h1>
       <form onSubmit={handleFormAddSubmit}>
         <div className='mb-2'>
@@ -48,6 +59,7 @@ const Login: FC = () => {
             value={user.name || ''}
             onChange={e => { setUser({ ...user, name: e.target.value })}}
             className='form-control'
+            ref={inputRef as RefObject<HTMLInputElement>}
           />
         </div>
         <div className='mb-2'>
@@ -64,7 +76,7 @@ const Login: FC = () => {
         <button type='submit' className='btn btn-primary'>Submit</button>
       </form>
       <Link to='/signup'>Signup</Link>
-    </>
+    </div>
   );
 };
 

@@ -16,18 +16,8 @@ function App() {
   return (
     <Router basename='home-score/'>
       <Switch>
-        <div
-          className='container container-fluid pt-5'
-          style={{
-            height: '100vh',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center'
-          }}
-        >
-          <Route path='/login' component={Login} />
-          <Route path='/signup' component={Signup} />
-        </div>
+        <Route path='/login' component={Login} />
+        <Route path='/signup' component={Signup} />
         <PrivateRoute
           path={'/homes/:id'}
           component={Show as unknown as FC<RouterProps>}
