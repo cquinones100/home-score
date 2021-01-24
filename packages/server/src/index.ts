@@ -6,12 +6,17 @@ import session from 'express-session';
 import usersRouter from './users';
 import currentRouter from './current';
 import categoriesRouter from './categories';
+import dotenv from 'dotenv';
+
+dotenv.config({ path: '../../.env' });
 
 var corsOptions = {
-  origin: 'http://localhost:3002',
+  origin: `${process.env.CLIENT_ROOT}`,
   optionsSuccessStatus: 200,
   credentials: true
 }
+
+console.log(process.env.CLIENT_ROOT);
 
 const app = express();
 

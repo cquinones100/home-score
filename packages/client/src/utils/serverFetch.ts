@@ -1,3 +1,5 @@
+import config from "../../config";
+
 const serverFetch = (async (path, init) => {
   const args = {
     credentials: 'include',
@@ -6,7 +8,7 @@ const serverFetch = (async (path, init) => {
     },
     ...init
   }
-  return await fetch(`http://localhost:3001${path}`, args);
+  return await fetch(`${config.SERVER_ROOT}${path}`, args);
 }) as typeof fetch;
 
 export default serverFetch;

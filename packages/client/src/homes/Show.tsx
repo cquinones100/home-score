@@ -1,6 +1,7 @@
 import React, { ChangeEvent, FC, useEffect, useState } from "react";
 import Category from "../../../../src/types/Category";
 import Home from '../../../../src/types/HomeWithImageUrls';
+import config from "../../config";
 import serverFetch from "../utils/serverFetch";
 
 type Props = {
@@ -33,7 +34,7 @@ const fetchHome = async (id: number, user_name: string, cb: (arg: Home) => void)
 export const homeShowUrl =
   (id: number, { user_name, useRoot = true }: HomeShowUrlConfigType): string => {
     let tail = '';
-    let root = 'http://localhost:3001';
+    let root = config.SERVER_ROOT;
 
     if (user_name) { tail = '?user_name=${user_name}' }
 

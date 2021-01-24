@@ -27,3 +27,5 @@ yarn-debug.log*
 yarn-error.log*
 
 packages/client/dist
+packages/client/config.ts
+.env

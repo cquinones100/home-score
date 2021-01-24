@@ -12,6 +12,7 @@ import Nav from './Nav';
 import PrivateRoute from './PrivateRoute';
 import CategoryIndex from './categories/Index';
 import Signup from './Signup';
+import config from '../config'
 
 function App() {
   return (
