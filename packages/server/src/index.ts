@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import cors from 'cors';
 import homesRouter from './homes';
 import bodyParser from 'body-parser';
@@ -16,9 +16,22 @@ var corsOptions = {
   credentials: true
 }
 
-console.log(process.env.CLIENT_ROOT);
+const loggingMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  console.log('*******************');
+  console.log(`Request: ${req.path}`);
+
+  try {
+    next();
+  } catch (e) {
+    console.log('Request error:');
+    console.log(e);
+  }
+  console.log('*******************');
+};
 
 const app = express();
+
+app.use(loggingMiddleware);
 
 app.use(cors(corsOptions));
 app.use(bodyParser.json());
