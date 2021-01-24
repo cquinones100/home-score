@@ -14,13 +14,11 @@ import CategoryIndex from './categories/Index';
 import Signup from './Signup';
 
 function App() {
-  console.log('testing');
   return (
     <Router>
       <Nav />
       <div className='container container-fluid'>
         <Switch>
-          <PrivateRoute path='/' component={Index} />
           <Route path='/login' component={Login} />
           <Route path='/signup' component={Signup} />
           <PrivateRoute
