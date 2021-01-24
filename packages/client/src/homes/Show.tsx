@@ -139,6 +139,7 @@ const Show: FC<Props> = (props) => {
           }}
         >
           <div
+            className='card'
             style={{
               display: 'flex',
               width: '50%',
@@ -146,12 +147,14 @@ const Show: FC<Props> = (props) => {
               height: '100%'
             }}
           >
-            <h1 style={{ textAlign: 'right' }}>
-              Current Score {(home.score * 10).toFixed(2)}
-            </h1>
+            <div className='card-header'>
+              <h1 style={{ textAlign: 'right' }}>
+                Current Score {(home.score * 10).toFixed(2)}
+              </h1>
+            </div>
             {
               home && (home?.categories?.length || 0) > 0 && (
-                <>
+                <div className='card-body'>
                   <div style={{ display: 'flex', flexDirection: 'row'}}>
                     <div style={{ width: '33%'}}>
                       Category
@@ -190,7 +193,7 @@ const Show: FC<Props> = (props) => {
                             <div style={{ width: '33%'}}>
                               <input
                                 style={{ width: '100%' }}
-                                value={category.score}
+                                value={category.score || ''}
                                 onChange={e => onChangeCategory(e, category)}
                                 onBlur={e => onBlurCategoryInput(e, category)}
                               />
@@ -200,7 +203,7 @@ const Show: FC<Props> = (props) => {
                       })
                     }
                   </div>
-                </>
+                </div>
               )
             }
           </div>
