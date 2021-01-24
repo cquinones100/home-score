@@ -4,7 +4,7 @@ import serverFetch from '../utils/serverFetch';
 
 type AddCategoryType = {
   name: string;
-  weight: number;
+  weight: string | number;
 };
 
 const Index: FC = () => {
@@ -112,7 +112,7 @@ const Index: FC = () => {
               id='weight'
               name='weight'
               value={addCategory.weight || ''}
-              onChange={e => { setAddCategory({ ...addCategory, weight: Number(e.target.value) })}}
+              onChange={e => { setAddCategory({ ...addCategory, weight: e.target.value })}}
               className='form-control'
             />
           </div>
