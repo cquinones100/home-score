@@ -119,7 +119,11 @@ const Show: FC<Props> = (props) => {
     return (
       <div className='row'>
         <h1>{home.address}</h1>
-        <h2><a href={home.url}>Visit Listing Page</a></h2>
+        <h2>
+          <a href={home.url} target='_blank' rel='noreferrer' >
+            Visit Listing Page
+          </a>
+        </h2>
         <div className='row'>
           <div className='col-md-6'>
             <div
