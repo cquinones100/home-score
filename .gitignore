@@ -5,6 +5,7 @@
 /packages/client/node_modules
 /packages/server/node_modules
 /packages/server/snapshots
+/packages/server/home_images
 /packages/serverreplHistory
 /.pnp
 .pnp.js

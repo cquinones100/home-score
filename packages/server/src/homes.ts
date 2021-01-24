@@ -2,8 +2,11 @@ import express from 'express';
 import dbConnection from './dbConnection';
 import getHomes from './queries/getHomes';
 import reconcileCategories from './reconcileCategories';
-import scrapeImageUrls from './scrapeImageUrls';
 import UserSession from './types/UserSession';
+import formidable from 'formidable';
+import fs from 'fs';
+import path from 'path';
+import { File } from 'formidable';
 
 type HomeImageUrl = {
   url: string;
@@ -23,10 +26,7 @@ homesRouter
 
     if (!home) return res.sendStatus(404);
 
-    res.json({
-      ...home,
-      image_urls: [],
-    });
+    res.json(home);
   });
 
 homesRouter
@@ -52,6 +52,67 @@ homesRouter
 
       res.sendStatus(422);
     }
+  });
+
+homesRouter
+  .post('/homes/:id/home_image_urls', async (req, res) => {
+    const { id: home_id } = req.params;
+
+    const home = (await dbConnection('homes').where({ home_id }))[0];
+
+    const form = new formidable.IncomingForm();
+    form.multiples = true;
+
+    form.parse(req, async (err, fields, { files }) => {
+      const homeImagesDir = process.cwd() + `/home_images`; 
+      const dir = process.cwd() + `/home_images/${home.address}`; 
+
+      fs.mkdir(homeImagesDir, (err) => { });
+      fs.mkdir(dir, (err) => { });
+
+      const saveFile = async (file: File) => {
+        const tempFilePath = file.path;
+
+        console.log(tempFilePath);
+        const targetPath = path.join(dir + '/' + file.name);
+
+        try {
+          fs.renameSync(tempFilePath, targetPath);
+
+          await dbConnection('home_image_urls').insert({
+            home_id,
+            url: targetPath
+          });
+        } catch (e) {
+          console.log("UPLOAD FAILED")
+          console.log(e)
+        }
+      };
+
+      if (!(files as File[]).length) {
+        await saveFile(files as File);
+      } else {
+        for (let i = 0; i < ((files as File[]).length as unknown as number); i++) {
+          await saveFile((files as File[])[i]);
+        }
+      }
+
+      res.sendStatus(200);
+    });
+  });
+
+homesRouter
+  .get('/homes/:id/home_image_urls/:home_image_url_id', async (req, res) => {
+    const { id: home_id, home_image_url_id } = req.params;
+
+    const homeImageUrl: HomeImageUrl = (
+      await dbConnection('home_image_urls')
+        .where({ home_id, home_image_url_id })
+      )[0];
+
+    if (!homeImageUrl) return res.sendStatus(404);
+
+    res.sendFile(homeImageUrl.url);
   });
 
 homesRouter

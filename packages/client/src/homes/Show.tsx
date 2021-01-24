@@ -98,116 +98,138 @@ const Show: FC<Props> = (props) => {
       updateCategory();
     };
 
+  const handleImageUpload = async (e) => {
+    const formData = new FormData();
+
+    for (let i = 0; i < e.target.files.length; i++) {
+      const file = e.target.files[i]
+
+      formData.append('files', file, file.name);
+    }
+
+    const resp = await serverFetch(`/homes/${home.home_id}/home_image_urls`, {
+      method: 'POST',
+      body: formData
+    }, { omit: ['headers'] });
+
+    if (resp.ok) setHome(null as unknown as Home);
+  };
+
   if (home) {
     return (
-      <div
-        style={{
-          display: 'flex',
-          flexDirection: 'column',
-          overflow: 'auto',
-          height: '90vh'
-        }}
-      >
+      <div className='row'>
         <h1>{home.address}</h1>
-        <div style={{ width: '100%', height: '20%' }}>
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'row',
-              justifyContent: 'flex-start',
-              height: '100%',
-              overflowX: 'auto'
-            }}>
-            {home.image_urls.filter(imageUrl => imageUrl !== null).map(imageUrl => {
-              return (
-                <img
-                  key={imageUrl}
-                  alt={home.address}
-                  src={imageUrl}
-                  style={{ objectFit: 'cover', width: '33%' }}
-                />
-              )
-            })}
+        <h2><a href={home.url}>Visit Listing Page</a></h2>
+        <div className='row'>
+          <div className='col-md-6'>
+            <div
+              className='card'
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%'
+              }}
+            >
+              <div className='card-header'>
+                <h1 style={{ textAlign: 'right' }}>
+                  Current Score {(home.score * 10).toFixed(2)}
+                </h1>
+              </div>
+              {
+                home && (home?.categories?.length || 0) > 0 && (
+                  <div className='card-body'>
+                    <div style={{ display: 'flex', flexDirection: 'row' }}>
+                      <div style={{ width: '33%' }}>
+                        Category
+                        </div>
+                      <div style={{ width: '33%' }}>
+                        Weight
+                        </div>
+                      <div style={{ width: '33%' }}>
+                        Score
+                        </div>
+                    </div>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        flexGrow: 1
+                      }}
+                    >
+                      {
+                        home && home.categories?.map((category, index) => {
+                          return (
+                            <div
+                              key={index}
+                              style={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                overflow: 'auto'
+                              }}
+                            >
+                              <div style={{ width: '33%' }}>
+                                {category.name}
+                              </div>
+                              <div style={{ width: '33%' }}>
+                                {category.weight}
+                              </div>
+                              <div style={{ width: '33%' }}>
+                                <input
+                                  style={{ width: '100%' }}
+                                  value={category.score || ''}
+                                  onChange={e => onChangeCategory(e, category)}
+                                  onBlur={e => onBlurCategoryInput(e, category)}
+                                />
+                              </div>
+                            </div>
+                          );
+                        })
+                      }
+                    </div>
+                  </div>
+                )
+              }
+            </div>
           </div>
-        </div>
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'space-between',
-            overflow: 'auto'
-          }}
-        >
           <div
-            className='card'
+            className='col-md-6'
             style={{
               display: 'flex',
-              width: '50%',
               flexDirection: 'column',
-              height: '100%'
+              justifyContent: 'center',
+              alignItems: 'center',
+              backgroundColor: 'rgb(247 247 247)'
             }}
           >
-            <div className='card-header'>
-              <h1 style={{ textAlign: 'right' }}>
-                Current Score {(home.score * 10).toFixed(2)}
-              </h1>
+            <div
+              className='mb-2'
+              style={{ display: 'flex', justifyContent: 'space-between' }}
+            >
+              <h3>
+                <i className="fas fa-camera"></i>
+                <input
+                  type='file'
+                  accept='image/png, image/jpeg'
+                  onChange={handleImageUpload}
+                  multiple
+                />
+              </h3>
             </div>
             {
-              home && (home?.categories?.length || 0) > 0 && (
-                <div className='card-body'>
-                  <div style={{ display: 'flex', flexDirection: 'row'}}>
-                    <div style={{ width: '33%'}}>
-                      Category
-                    </div>
-                    <div style={{ width: '33%'}}>
-                      Weight
-                    </div>
-                    <div style={{ width: '33%'}}>
-                      Score
-                    </div>
-                  </div>
-                  <div
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      flexGrow: 1
-                    }}
-                  >
-                    {
-                      home && home.categories?.map((category, index) => {
-                        return (
-                          <div
-                            key={index}
-                            style={{
-                              display: 'flex',
-                              flexDirection: 'row',
-                              overflow: 'auto'
-                            }}
-                          >
-                            <div style={{ width: '33%'}}>
-                              {category.name}
-                            </div>
-                            <div style={{ width: '33%'}}>
-                              {category.weight}
-                            </div>
-                            <div style={{ width: '33%'}}>
-                              <input
-                                style={{ width: '100%' }}
-                                value={category.score || ''}
-                                onChange={e => onChangeCategory(e, category)}
-                                onBlur={e => onBlurCategoryInput(e, category)}
-                              />
-                            </div>
-                          </div>
-                        );
-                      })
+              home.image_urls.filter((id) => id !== null).map((homeImageUrlId) => {
+                return (
+                  <img
+                    key={homeImageUrlId}
+                    src={
+                      `${config.SERVER_ROOT}/homes/${home.home_id}/home_image_urls/${homeImageUrlId}`
                     }
-                  </div>
-                </div>
-              )
+                    style={{ width: '100%' }}
+                  />
+                )
+              })
             }
           </div>
-        </ div>
+        </div>
       </div>
     )
   }

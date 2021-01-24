@@ -50,7 +50,7 @@ const getHomes = ({ user_id }: { user_id?: number } = {}) => {
       ) as scores,
       avg(score) as score,
       categories,
-      array_agg(home_image_urls.url) as image_urls
+      array_agg(home_image_urls.home_image_url_id) as image_urls
     from homes
     left join home_image_urls using (home_id)
     full join users_categories_homes on true
