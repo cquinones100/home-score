@@ -6,6 +6,9 @@
   ],
   "scripts": {
     "client:dev": "yarn workspace home-score-react start",
-    "server:dev": "yarn workspace home-score-server dev"
+    "client:build": "yarn workspace home-score-react build",
+    "client:build:prod": "yarn workspace home-score-react build:prod",
+    "server:dev": "yarn workspace home-score-server dev",
+    "server:start": "yarn workspace home-score-server dev"
   }
 }
