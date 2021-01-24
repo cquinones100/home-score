@@ -14,8 +14,6 @@ const Login: FC = () => {
   const [authenticatedUser, setAuthenticatedUser] =
     useState(null as unknown as User);
 
-    console.log('hiiiiiiiiii')
-
   const handleFormAddSubmit = async (e: ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
