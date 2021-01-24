@@ -23,17 +23,9 @@ homesRouter
 
     if (!home) return res.sendStatus(404);
 
-    let image_urls = await dbConnection('home_image_urls')
-      .select('url')
-      .where({ home_id });
-
-    if (image_urls.length === 0) {
-      image_urls = await scrapeImageUrls(home.url, home.address);
-    }
-
     res.json({
       ...home,
-      image_urls: (image_urls as HomeImageUrl[]).map(({ url }) => url),
+      image_urls: [],
     });
   });
 

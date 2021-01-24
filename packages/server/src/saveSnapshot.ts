@@ -2,9 +2,15 @@ import { Page } from 'puppeteer';
 import fs from 'fs';
 
 const saveSnapshot = async (page: Page, url: string, address: string) => {
-  await page.$eval('div.sectionBottomLink', (link) => {
-    (link as HTMLLinkElement).click();
-  });
+  console.log(`Preparing to save snapshot for ${url}`);
+
+  // try {
+  //   await page.$eval('div.sectionBottomLink', (link) => {
+  //     (link as HTMLLinkElement).click();
+  //   });
+  // } catch (e) {
+  //   console.log('failed to open up summary');
+  // }
 
   const dir = process.cwd() + `/snapshots/${address}`; 
 
@@ -15,14 +21,18 @@ const saveSnapshot = async (page: Page, url: string, address: string) => {
     path:`${dir}/screenshot1.png`
   });
 
-  await page.$eval('img.landscape', (link) => {
-    (link as HTMLLinkElement).click();
-  })
+  // try {
+  //   await page.$eval('img.landscape', (link) => {
+  //     (link as HTMLLinkElement).click();
+  //   })
+  // } catch(e) {
+  //   console.log('failed to open up images')
+  // }
 
-  await page.screenshot({
-    fullPage: true,
-    path:`${dir}/screenshot2.png`
-  });
+  // await page.screenshot({
+  //   fullPage: true,
+  //   path:`${dir}/screenshot2.png`
+  // });
 };
 
 export default saveSnapshot;

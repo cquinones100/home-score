@@ -99,9 +99,6 @@ const Show: FC<Props> = (props) => {
     };
 
   if (home) {
-    // eslint-disable-next-line @typescript-eslint/no-var-requires
-    const screenshot = require(`../../../server/snapshots/${home.address}/screenshot1.png`);
-
     return (
       <div
         style={{
@@ -204,41 +201,8 @@ const Show: FC<Props> = (props) => {
                     }
                   </div>
                 </>
-                // <table className='table'>
-                //   <thead style={{ display: 'block' }}>
-                //     <tr>
-                //       <th>Category</th>
-                //       <th>Weight</th>
-                //       <th>Score</th>
-                //     </tr>
-                //   </thead>
-                //   <tbody style={{ display: 'block', overflow: 'auto' }}>
-                //     {
-                //       home && home.categories?.map((category, index) => {
-                //         return (
-                //           <tr key={index}>
-                //             <td>{category.name}</td>
-                //             <td>
-                //               {category.weight}
-                //             </td>
-                //             <td>
-                //               <input
-                //                 value={category.score}
-                //                 onChange={e => onChangeCategory(e, category)}
-                //                 onBlur={e => onBlurCategoryInput(e, category)}
-                //               />
-                //             </td>
-                //           </tr>
-                //         );
-                //       })
-                //     }
-                //   </tbody>
-                // </table>
               )
             }
-          </div>
-          <div style={{ overflow: 'auto', flexGrow: 1 }}>
-            <img src={screenshot} style={{ width: '100%' }} />
           </div>
         </ div>
       </div>
