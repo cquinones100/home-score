@@ -60,7 +60,7 @@ const Show: FC<Props> = (props) => {
           if (mapCategory.category_id === category.category_id) {
             return ({
               ...category,
-              score: e.target.value as unknown as number
+              value: e.target.value as unknown as number
             })
           } else {
             return mapCategory;
@@ -142,16 +142,13 @@ const Show: FC<Props> = (props) => {
               {
                 home && (home?.categories?.length || 0) > 0 && (
                   <div className='card-body'>
-                    <div style={{ display: 'flex', flexDirection: 'row' }}>
-                      <div style={{ width: '33%' }}>
+                    <div className='row'>
+                      <div className='col-6'>
                         Category
-                        </div>
-                      <div style={{ width: '33%' }}>
-                        Weight
-                        </div>
-                      <div style={{ width: '33%' }}>
+                      </div>
+                      <div className='col-6'>
                         Score
-                        </div>
+                      </div>
                     </div>
                     <div
                       style={{
@@ -170,17 +167,16 @@ const Show: FC<Props> = (props) => {
                                 flexDirection: 'row',
                                 overflow: 'auto'
                               }}
+                              className='m-2'
                             >
-                              <div style={{ width: '33%' }}>
+                              <div style={{ width: '50%' }}>
                                 {category.name}
                               </div>
-                              <div style={{ width: '33%' }}>
-                                {category.weight}
-                              </div>
-                              <div style={{ width: '33%' }}>
+                              <div style={{ width: '50%' }}>
                                 <input
+                                  className='form-control'
                                   style={{ width: '100%' }}
-                                  value={category.score || ''}
+                                  value={category.value || ''}
                                   onChange={e => onChangeCategory(e, category)}
                                   onBlur={e => onBlurCategoryInput(e, category)}
                                 />

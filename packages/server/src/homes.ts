@@ -19,14 +19,29 @@ homesRouter
   .get(async (req, res) => {
     const user_id = (req.session as UserSession)?.user?.user_id;
     const { id: home_id } = req.params;
-
-    await reconcileCategories(Number(home_id), user_id);
-
-    const home = (await getHomes({ user_id, home_id: Number(home_id) }))[0];
+    const home = (await dbConnection('homes').where({ home_id }))[0];
 
     if (!home) return res.sendStatus(404);
 
-    res.json(home);
+    await reconcileCategories(Number(home_id), user_id);
+
+    const categories = (await
+      dbConnection('categories_homes')
+        .leftJoin('categories', 'categories_homes.category_id', 'categories.category_id')
+        .where({ home_id, user_id })
+    );
+
+    const homeImageUrls = (await
+      dbConnection('home_image_urls')
+        .select('home_image_url_id')
+        .where({ home_id })
+    );
+
+    res.json({
+      ...home,
+      categories,
+      image_urls: homeImageUrls.map(({ home_image_url_id }) => home_image_url_id)
+    });
   });
 
 homesRouter
