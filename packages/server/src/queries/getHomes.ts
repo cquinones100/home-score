@@ -1,11 +1,20 @@
 import dbConnection from "../dbConnection";
 
-const getHomes = ({ user_id }: { user_id?: number } = {}) => {
+const getHomes = ({ user_id, home_id }: { user_id?: number, home_id?: number } = {}) => {
   const userIdQuery = user_id ?
     dbConnection.raw(`where user_id = ?`, [user_id]) :
     null;
 
-  const bindings = [userIdQuery].filter((binding) => binding !== null);
+  let homeIdQuery = null;
+
+  if (user_id && home_id) {
+    homeIdQuery = dbConnection.raw(`AND homes.home_id = ?`, [home_id]);
+  } else if (home_id) {
+    homeIdQuery = dbConnection.raw(`WHERE homes.home_id = ?`, [home_id]);
+  }
+
+  const bindings = [userIdQuery, homeIdQuery]
+    .filter((binding) => binding !== null);
 
   const query = dbConnection.raw(`
     with users_categories_homes as (
@@ -37,6 +46,7 @@ const getHomes = ({ user_id }: { user_id?: number } = {}) => {
     )
 
     select
+      distinct on (homes.url)
       categories,
       homes.url,
       address,
@@ -55,6 +65,7 @@ const getHomes = ({ user_id }: { user_id?: number } = {}) => {
     left join home_image_urls using (home_id)
     full join users_categories_homes on true
     ${userIdQuery === null ? '' : '?'}
+    ${homeIdQuery === null ? '' : '?'}
     group by categories, homes.url, homes.address, homes.home_id, user_name
   `, bindings)
 

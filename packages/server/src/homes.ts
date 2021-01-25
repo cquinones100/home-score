@@ -20,9 +20,9 @@ homesRouter
     const user_id = (req.session as UserSession)?.user?.user_id;
     const { id: home_id } = req.params;
 
-    reconcileCategories(Number(home_id), user_id);
+    await reconcileCategories(Number(home_id), user_id);
 
-    const home = (await getHomes({ user_id }))[0];
+    const home = (await getHomes({ user_id, home_id: Number(home_id) }))[0];
 
     if (!home) return res.sendStatus(404);
 
