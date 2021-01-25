@@ -2,7 +2,7 @@ import dbConnection from "./dbConnection";
 import getHomes from "./queries/getHomes";
 
 const reconcileCategories = async (home_id: number, user_id: number) => {
-  const home = await getHomes().where({ home_id });
+  const home = await dbConnection('homes').where({ home_id });
   const user = await dbConnection('users').where({ user_id });
 
   if (home[0] && user[0]) {

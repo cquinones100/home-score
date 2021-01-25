@@ -40,7 +40,9 @@ homesRouter
     res.json({
       ...home,
       categories,
-      image_urls: homeImageUrls.map(({ home_image_url_id }) => home_image_url_id)
+      image_urls: homeImageUrls.map(({ home_image_url_id }) => home_image_url_id),
+      score: categories.reduce((acc, { value, weight }) => acc += (value * weight), 0) /
+        categories.reduce((acc, { weight }) => acc += weight, 0)
     });
   });
 
@@ -48,9 +50,25 @@ homesRouter
   .route('/homes')
   .get(async (req, res) => {
     const user_id = (req.session as UserSession)?.user?.user_id;
-    const homes = await getHomes({ user_id })
+    const homes = (await dbConnection('homes'));
 
-    res.json(homes);
+    res.json(
+      await Promise.all(
+        homes.map(async(home) => {
+          const categories = (await
+            dbConnection('categories_homes')
+              .leftJoin('categories', 'categories_homes.category_id', 'categories.category_id')
+              .where({ home_id: home.home_id, user_id })
+          );
+
+          return({
+            ...home,
+            score: categories.reduce((acc, { value, weight }) => acc += (value * weight), 0) /
+              categories.reduce((acc, { weight }) => acc += weight, 0)
+          });
+        })
+      )
+    );
   })
   .post(async (req, res) => {
     const { url, address } = req.body;

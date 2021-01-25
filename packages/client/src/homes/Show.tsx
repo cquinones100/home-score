@@ -3,6 +3,7 @@ import Category from "../../../../src/types/Category";
 import Home from '../../../../src/types/HomeWithImageUrls';
 import config from "../../config";
 import serverFetch from "../utils/serverFetch";
+import { sortBy } from 'lodash';
 
 type Props = {
   match: {
@@ -136,7 +137,7 @@ const Show: FC<Props> = (props) => {
             >
               <div className='card-header'>
                 <h1 style={{ textAlign: 'right' }}>
-                  Current Score {(home.score * 10).toFixed(2)}
+                  Current Score {(home.score || 0).toFixed(2)}
                 </h1>
               </div>
               {
@@ -158,7 +159,7 @@ const Show: FC<Props> = (props) => {
                       }}
                     >
                       {
-                        home && home.categories?.map((category, index) => {
+                        home && sortBy(home.categories, ['name'])?.map((category, index) => {
                           return (
                             <div
                               key={index}

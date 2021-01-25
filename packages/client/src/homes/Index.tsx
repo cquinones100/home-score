@@ -78,7 +78,7 @@ const Index: FC = () => {
                 {home.address}
               </div>
               <div className='col xs-4'>
-                {home.score ? (home.score * 10).toFixed(2) : 'No Score Yet'}
+                {home.score ? (home.score)?.toFixed(2) : 'No Score Yet'}
               </div>
               <div className='col xs-4'>
                 <Link to={homeShowUrl(home.home_id, { useRoot: false })}>
