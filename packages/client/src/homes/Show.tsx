@@ -202,36 +202,45 @@ const Show: FC<Props> = (props) => {
               flexDirection: 'column',
               justifyContent: 'center',
               alignItems: 'center',
-              backgroundColor: 'rgb(247 247 247)'
             }}
           >
             <div
-              className='mb-2'
+              className='mb-2 card'
               style={{ display: 'flex', justifyContent: 'space-between' }}
             >
-              <h3>
-                <i className="fas fa-camera"></i>
-                <input
-                  type='file'
-                  accept='image/png, image/jpeg'
-                  onChange={handleImageUpload}
-                  multiple
-                />
-              </h3>
+              <div className='card-body'>
+                <div className='row'>
+                  <div className='col-12'>
+                    <input
+                      type='file'
+                      accept='image/png, image/jpeg'
+                      onChange={handleImageUpload}
+                      multiple
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
-            {
-              home.image_urls.filter((id) => id !== null).map((homeImageUrlId) => {
-                return (
-                  <img
-                    key={homeImageUrlId}
-                    src={
-                      `${config.SERVER_ROOT}/homes/${home.home_id}/home_image_urls/${homeImageUrlId}`
-                    }
-                    style={{ width: '100%' }}
-                  />
-                )
-              })
-            }
+            <div className='card'>
+              <div className='card-body'>
+                {
+                  home.image_urls.filter((id) => id !== null).map((homeImageUrlId) => {
+                    return (
+                      <div className='row' key={homeImageUrlId}>
+                        <div className='col-12'>
+                          <img
+                            src={
+                              `${config.SERVER_ROOT}/homes/${home.home_id}/home_image_urls/${homeImageUrlId}`
+                            }
+                            style={{ width: '100%' }}
+                          />
+                        </div>
+                      </div>
+                    )
+                  })
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>
