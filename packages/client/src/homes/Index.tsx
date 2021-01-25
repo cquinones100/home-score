@@ -60,38 +60,35 @@ const Index: FC = () => {
 
   return (
     <>
-      <table className='table'>
-        <thead>
-          <tr>
-            <th>Address</th>
-            <th>Url</th>
-            <th>Score</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {
-            homes && (homes as HomeWithImageUrls[]).map((home, index) => {
-              return (
-                <Fragment key={index}>
-                  <tr>
-                    <td>{home.address}</td>
-                    <td><a href={home.url}>{home.url}</a></td>
-                    <td>
-                      {home.score ? (home.score * 10).toFixed(2) : 'No Score Yet'}
-                    </td>
-                    <td>
-                      <Link to={homeShowUrl(home.home_id, { useRoot: false })}>
-                        View
-                      </Link>
-                    </td>
-                  </tr>
-                </Fragment>
-              );
-            })
-          }
-        </tbody>
-      </table>
+      <div className='row'>
+        <div className='col xs-4'>
+          Address
+        </div>
+        <div className='col xs-4'>
+          Score
+        </div>
+        <div className='col xs-4'>
+        </div>
+      </div>
+      {
+        homes && (homes as HomeWithImageUrls[]).map((home, index) => {
+          return (
+            <div key={index} className='row'>
+              <div className='col xs-4'>
+                {home.address}
+              </div>
+              <div className='col xs-4'>
+                {home.score ? (home.score * 10).toFixed(2) : 'No Score Yet'}
+              </div>
+              <div className='col xs-4'>
+                <Link to={homeShowUrl(home.home_id, { useRoot: false })}>
+                  View
+                </Link>
+              </div>
+            </div>
+          );
+        })
+      }
       { !addHome && (
         <button
           type='submit'
