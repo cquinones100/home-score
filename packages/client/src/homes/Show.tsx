@@ -159,32 +159,38 @@ const Show: FC<Props> = (props) => {
                       }}
                     >
                       {
-                        home && sortBy(home.categories, ['name'])?.map((category, index) => {
-                          return (
-                            <div
-                              key={index}
-                              style={{
-                                display: 'flex',
-                                flexDirection: 'row',
-                                overflow: 'auto'
-                              }}
-                              className='m-2'
-                            >
-                              <div style={{ width: '50%' }}>
-                                {category.name}
+                        home && sortBy(home.categories, ['name'])?.map(
+                          (category: Category, index: number) => {
+                            return (
+                              <div
+                                key={index}
+                                style={{
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  overflow: 'auto'
+                                }}
+                                className='m-2'
+                              >
+                                <div style={{ width: '50%' }}>
+                                  {category.name}
+                                </div>
+                                <div style={{ width: '50%' }}>
+                                  <input
+                                    className='form-control'
+                                    style={{ width: '100%' }}
+                                    value={category.value || ''}
+                                    onChange={e => {
+                                      onChangeCategory(e, category)
+                                    }}
+                                    onBlur={e => {
+                                      onBlurCategoryInput(e, category)
+                                    }}
+                                  />
+                                </div>
                               </div>
-                              <div style={{ width: '50%' }}>
-                                <input
-                                  className='form-control'
-                                  style={{ width: '100%' }}
-                                  value={category.value || ''}
-                                  onChange={e => onChangeCategory(e, category)}
-                                  onBlur={e => onBlurCategoryInput(e, category)}
-                                />
-                              </div>
-                            </div>
-                          );
-                        })
+                            );
+                          }
+                        )
                       }
                     </div>
                   </div>
