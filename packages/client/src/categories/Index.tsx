@@ -104,7 +104,7 @@ const Index: FC = () => {
     };
 
   const onBlurCategoryInput =
-    (e: ChangeEvent<HTMLInputElement>, category: Category) => {
+    (e: FocusEvent, category: Category) => {
       const updateCategory = async () => {
         if (category) {
           await serverFetch(
@@ -224,7 +224,7 @@ const Index: FC = () => {
                 key={category.name}
                 category={category}
                 onChangeCategory={onChangeCategory}
-                onBlur={onBlurCategoryInput}
+                onBlurCategoryInput={onBlurCategoryInput}
               />
             );
           })
