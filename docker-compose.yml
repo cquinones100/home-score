@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+
+  # NGINX proxy to internal services
+  reverse_proxy:
+    container_name: reverse_proxy
+    image: nginx:1.17.10
+    volumes:
+      - ./reverse_proxy/nginx.conf:/etc/nginx/nginx.conf
+      - static-content:/home-score
+    depends_on: 
+      - web
+    ports:
+      - "4000:80"
+
+  # Front and backend of the app
+  web:
+    build: ./app
+    container_name: web
+    ports:
+      - "3001:3001"
+      - "3002:3002"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - static-content:/home-score/
+  
+  # Postgres database
+  db:
+    image: "postgres"
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: home-score
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  
+volumes:
+  database-data:
+  static-content:

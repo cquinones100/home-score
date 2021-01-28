@@ -9,6 +9,9 @@
     "client:build": "yarn workspace home-score-react build",
     "client:build:prod": "yarn workspace home-score-react build:prod",
     "server:dev": "yarn workspace home-score-server dev",
-    "server:start": "yarn workspace home-score-server dev"
+    "server:start": "yarn workspace home-score-server dev",
+    "start:dev": "yarn client:dev & yarn server:dev",
+    "start:prod": "yarn client:build:prod & yarn server:dev",
+    "db:migrate": "yarn knex migrate:latest --knexfile packages/server/src/knexfile.ts"
   }
 }

@@ -3,11 +3,7 @@
 const knexConfig = {
   development: {
     client: "postgresql",
-    connection: {
-      host: '127.0.0.1',
-      database: 'home-score',
-      user: 'postgres',
-    },
+    connection: process.env.DATABASE_URL,
     migrations: {
       extension: 'ts',
       directory: 'db/migrations'

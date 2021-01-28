@@ -1,13 +1,13 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
-/packages/client/node_modules
-/packages/server/node_modules
-/packages/server/snapshots
-/packages/server/home_images
-/packages/serverreplHistory
-/.pnp
+/app/node_modules
+/app/packages/client/node_modules
+/app/packages/server/node_modules
+/app/packages/server/snapshots
+/app/packages/server/home_images
+/app/packages/serverreplHistory
+/app/.pnp
 .pnp.js
 
 # testing
@@ -27,6 +27,5 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-packages/client/dist
-packages/client/config.ts
+app/packages/client/dist
 .env

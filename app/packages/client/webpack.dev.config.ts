@@ -49,7 +49,9 @@ const config: Configuration = {
     historyApiFallback: true,
     port: 3002,
     open: true,
-    hot: true
+    hot: true,
+    host: "0.0.0.0",
+    disableHostCheck: true
   },
   output: {
     publicPath: '/',
