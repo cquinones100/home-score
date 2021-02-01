@@ -7,7 +7,3 @@ ADD package.json /app
 ADD . /app
 
 RUN yarn
-
-RUN yarn client:build:prod
-
-CMD ["yarn", "server:start"]

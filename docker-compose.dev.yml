@@ -1,0 +1,55 @@
+version: '3'
+
+services:
+
+  # NGINX proxy to internal services
+  reverse_proxy-dev:
+    container_name: reverse_proxy-dev
+    image: nginx:1.17.10
+    volumes:
+      - ./reverse_proxy/nginx.dev.conf:/etc/nginx/nginx.conf
+    depends_on: 
+      - web-dev
+    ports:
+      - "4000:80"
+
+  # Front and backend of the app
+  web-dev:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev
+    container_name: web
+    ports:
+      - "3002:3002"
+    command: "yarn client:dev"
+    depends_on:
+      - backend-dev
+  
+  backend-dev:
+    build:
+      context: ./app
+      dockerfile: Dockerfile.dev
+    container_name: backend
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    command: "yarn server:start"
+  
+  # Postgres database
+  db:
+    image: "postgres"
+    volumes:
+      - database-data:/var/lib/postgresql/data/
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: home-score
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  
+volumes:
+  database-data:
